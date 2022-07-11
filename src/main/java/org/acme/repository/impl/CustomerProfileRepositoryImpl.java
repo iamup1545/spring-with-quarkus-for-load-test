@@ -1,6 +1,5 @@
 package org.acme.repository.impl;
 
-import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCursor;
 import org.acme.common.BaseMongoDBRepository;
 import org.acme.entity.CustomerProfile;
@@ -8,7 +7,6 @@ import org.acme.repository.CustomerProfileRepository;
 import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
