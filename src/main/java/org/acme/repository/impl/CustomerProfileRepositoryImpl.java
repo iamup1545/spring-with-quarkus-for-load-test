@@ -34,7 +34,7 @@ public class CustomerProfileRepositoryImpl extends BaseMongoDBRepository impleme
         try (MongoCursor<CustomerProfile> cursor = super.getCustomerProfileCollection().find(query).cursor()) {
             this.mapCustomerProfileList(cursor, customerProfileList);
         } catch (Exception exception) {
-            System.out.println("Error!! : " + exception);
+            System.err.println("Error!! : " + exception);
         }
 
         return customerProfileList;
@@ -46,7 +46,7 @@ public class CustomerProfileRepositoryImpl extends BaseMongoDBRepository impleme
         try (MongoCursor<CustomerProfile> cursor = super.getCustomerProfileCollection().find().limit(limit).cursor()) {
             this.mapCustomerProfileList(cursor, customerProfileList);
         } catch (Exception exception) {
-            System.out.println("Error!! : " + exception);
+            System.err.println("Error!! : " + exception);
         }
 
         return customerProfileList;
