@@ -8,7 +8,6 @@ import org.acme.entity.AddressCis;
 import org.acme.entity.CustomerCis;
 import org.acme.entity.CustomerProfile;
 import org.acme.repository.CustomerProfileRepository;
-import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -104,7 +103,7 @@ public class CustomerProfileService {
 
     }
 
-    public List<String> addCustomerProfileALotProfile(List<CustomerProfile> customerProfileList) {
+    public List<String> addCustomerProfileManyProfile(List<CustomerProfile> customerProfileList) {
 
         List<String> idCustomerProfile = new ArrayList<>();
         for (CustomerProfile customerProfile : customerProfileList) {
@@ -114,24 +113,29 @@ public class CustomerProfileService {
         this.customerProfileRepository.persist(customerProfileList);
 
         for (CustomerProfile customerProfile : customerProfileList) {
-            idCustomerProfile.add(String.valueOf(customerProfile.getCustomerId()));
+            idCustomerProfile.add("Insert profile : " + customerProfile.getFullName() + " success");
         }
 
         return idCustomerProfile;
 
     }
 
-    public List<CustomerProfileDto> deleteCustomerProfileALotProfile(List<CustomerProfile> customerProfileList) {
+    public List<CustomerProfileDto> deleteCustomerProfileManyProfile(List<CustomerProfile> customerProfileList) {
+        List<CustomerProfileDto> deleteCustomerProfileList = new ArrayList<>();
+        CustomerProfileDto customerProfileDto;
 
-        List<CustomerProfileDto> deleteCustomerProfile = new ArrayList<>();
-        for (CustomerProfile customerProfile : customerProfileList) {
-            Document query = new Document();
-            this.customerProfileRepository.find(query);
-            this.customerProfileRepository.delete(customerProfile);
+        List<CustomerProfile> customerProfiles = this.customerProfileRepository
+                .deleteCustomerProfileManyProfile(customerProfileList);
+
+        for (CustomerProfile deleteCustomerProfile : customerProfiles) {
+            customerProfileDto = new CustomerProfileDto();
+            customerProfileDto.setCustomerId(String.valueOf(deleteCustomerProfile.getCustomerId()));
+            customerProfileDto.setTitleName(deleteCustomerProfile.getTitleName());
+            customerProfileDto.setFirstName(deleteCustomerProfile.getFirstName());
+            customerProfileDto.setLastName(deleteCustomerProfile.getLastName());
         }
 
-        return deleteCustomerProfile;
+        return deleteCustomerProfileList;
 
     }
-
 }

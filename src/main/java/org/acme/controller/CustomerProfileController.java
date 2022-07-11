@@ -8,6 +8,7 @@ import org.acme.entity.CustomerProfile;
 import org.acme.service.CustomerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,9 +61,15 @@ public class CustomerProfileController {
         return this.customerProfileService.getInvestmentLimitCisWithLimit(limit/2);
     }
 
-    @PostMapping("/addCustomerList")
+    @PostMapping("/addCustomerProfileList")
     @ResponseStatus(HttpStatus.CREATED)
-    public List<String> addCustomerList(@RequestBody List<CustomerProfile> customerProfileList){
-        return this.customerProfileService.addCustomerProfileALotProfile(customerProfileList);
+    public List<String> addCustomerProfileList(@RequestBody List<CustomerProfile> customerProfileList){
+        return this.customerProfileService.addCustomerProfileManyProfile(customerProfileList);
+    }
+
+    @DeleteMapping("/deleteCustomerProfileList")
+    @ResponseStatus(HttpStatus.OK)
+    public List<CustomerProfileDto> deleteCustomerProfileList(@RequestBody List<CustomerProfile> customerProfileList){
+        return this.customerProfileService.deleteCustomerProfileManyProfile(customerProfileList);
     }
 }

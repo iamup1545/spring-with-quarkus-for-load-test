@@ -12,4 +12,6 @@ public interface CustomerProfileRepository extends PanacheMongoRepository<Custom
     Optional<CustomerProfile> findCustomerProfileById(String id);
 
     List<CustomerProfile> getCustomerProfileWithLimit(int limit);
+
+    List<CustomerProfile> deleteCustomerProfileManyProfile(List<CustomerProfile> customerProfileList);
 }

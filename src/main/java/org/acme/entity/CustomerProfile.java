@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.bson.codecs.pojo.annotations.BsonId;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -36,5 +35,9 @@ public class CustomerProfile {
     private LocalDate createdDateTime;
 
     private List<CustomerCis> customerCisList;
+
+    public String getFullName() {
+        return this.titleName + this.firstName + " " + this.lastName;
+    }
 
 }
