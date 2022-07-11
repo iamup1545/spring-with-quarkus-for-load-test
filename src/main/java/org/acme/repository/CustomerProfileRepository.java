@@ -12,13 +12,4 @@ public interface CustomerProfileRepository extends PanacheMongoRepository<Custom
     Optional<CustomerProfile> findCustomerProfileById(String id);
 
     List<CustomerProfile> getCustomerProfileWithLimit(int limit);
-
-//    List<CustomerProfile> getCustomerCisWithLimit(int limit);
-
-//    List<CustomerProfile> getAddressCisWithLimit(int limit);
-
-//    List<CustomerProfile> getInvestmentLimitCisWithLimit(int limit);
-
-    List<CustomerProfileDto> getTest(int limit);
-
 }

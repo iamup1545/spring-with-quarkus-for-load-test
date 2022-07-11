@@ -24,12 +24,6 @@ public class CustomerProfileController {
     @Autowired
     private CustomerProfileService customerProfileService;
 
-    @GetMapping("/getTest/{limit}") // for load test
-    @ResponseStatus(HttpStatus.OK)
-    public List<CustomerProfileDto> getTest(@PathVariable int limit){
-        return this.customerProfileService.getTest(limit);
-    }
-
     @GetMapping("/getCustomerProfileById/{customerId}") // for load test
     @ResponseStatus(HttpStatus.OK)
     public Optional<CustomerProfile> getCustomerProfileById(@PathVariable String customerId){

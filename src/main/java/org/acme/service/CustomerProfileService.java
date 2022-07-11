@@ -1,6 +1,5 @@
 package org.acme.service;
 
-import lombok.extern.slf4j.Slf4j;
 import org.acme.dto.AddressCisDto;
 import org.acme.dto.CustomerCisDto;
 import org.acme.dto.CustomerProfileDto;
@@ -9,26 +8,20 @@ import org.acme.entity.AddressCis;
 import org.acme.entity.CustomerCis;
 import org.acme.entity.CustomerProfile;
 import org.acme.repository.CustomerProfileRepository;
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service("customerProfileService")
-@Slf4j
 public class CustomerProfileService {
-
-//    @Autowired
-//    private CustomerProfileMongoDBClient customerProfileMongoDBClient;
 
     @Autowired
     private CustomerProfileRepository customerProfileRepository;
-
-    public List<CustomerProfileDto> getTest(int limit) {
-        return this.customerProfileRepository.getTest(limit);
-    }
 
     public Optional<CustomerProfile> getCustomerProfileById(String id){
         return customerProfileRepository.findCustomerProfileById(id);
@@ -113,13 +106,31 @@ public class CustomerProfileService {
 
     public List<String> addCustomerProfileALotProfile(List<CustomerProfile> customerProfileList) {
 
-        customerProfileRepository.persist(customerProfileList);
         List<String> idCustomerProfile = new ArrayList<>();
+        for (CustomerProfile customerProfile : customerProfileList) {
+            customerProfile.setCreatedDateTime(LocalDate.now());
+        }
+
+        this.customerProfileRepository.persist(customerProfileList);
+
         for (CustomerProfile customerProfile : customerProfileList) {
             idCustomerProfile.add(String.valueOf(customerProfile.getCustomerId()));
         }
 
         return idCustomerProfile;
+
+    }
+
+    public List<CustomerProfileDto> deleteCustomerProfileALotProfile(List<CustomerProfile> customerProfileList) {
+
+        List<CustomerProfileDto> deleteCustomerProfile = new ArrayList<>();
+        for (CustomerProfile customerProfile : customerProfileList) {
+            Document query = new Document();
+            this.customerProfileRepository.find(query);
+            this.customerProfileRepository.delete(customerProfile);
+        }
+
+        return deleteCustomerProfile;
 
     }
 
