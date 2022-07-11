@@ -28,9 +28,6 @@ public class CustomerProfileRepositoryImpl extends BaseMongoDBRepository impleme
     public static final String createdDateTime = "createdDateTime";
     public static final String customerCisList = "customerCisList";
 
-    @Autowired
-    private MongoClient mongoClient;
-
     public List<CustomerProfile> findCustomerProfileById(String id) {
         List<CustomerProfile> customerProfileList = new ArrayList<>();
         Document query = new Document();
