@@ -82,7 +82,7 @@ public class CustomerProfileApplication {
                     customerProfileList.add(customerProfile);
                 }
 
-                customerProfileRepository.persist(customerProfileList);
+                customerProfileRepository.addManyProfile(customerProfileList);
             }
 
             System.out.println("Insert finished : QuarkusApplication");

@@ -1,6 +1,6 @@
 package org.acme.service;
 
-import lombok.extern.slf4j.Slf4j;
+import org.acme.common.BaseService;
 import org.acme.dto.AddressCisDto;
 import org.acme.dto.CustomerCisDto;
 import org.acme.dto.CustomerProfileDto;
@@ -14,28 +14,21 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service("customerProfileService")
-@Slf4j
-public class CustomerProfileService {
-
-//    @Autowired
-//    private CustomerProfileMongoDBClient customerProfileMongoDBClient;
+public class CustomerProfileService extends BaseService {
 
     @Autowired
     private CustomerProfileRepository customerProfileRepository;
 
-    public List<CustomerProfileDto> getTest(int limit) {
-        return this.customerProfileRepository.getTest(limit);
+    public List<CustomerProfileDto> getCustomerProfileById(String id){
+        List<CustomerProfile> customerProfileList =  customerProfileRepository.findCustomerProfileById(id);
+        return super.mapCustomerProfileData(customerProfileList);
     }
 
-    public Optional<CustomerProfile> getCustomerProfileById(String id){
-        return customerProfileRepository.findCustomerProfileById(id);
-    }
-
-    public List<CustomerProfile> getCustomerProfileWithLimit(int limit){
-        return customerProfileRepository.getCustomerProfileWithLimit(limit);
+    public List<CustomerProfileDto> getCustomerProfileWithLimit(int limit){
+        List<CustomerProfile> customerProfileList =  customerProfileRepository.getCustomerProfileWithLimit(limit);
+        return super.mapCustomerProfileData(customerProfileList);
     }
 
     public List<CustomerProfileDto> getCustomerProfileOnlyWithLimit(int limit){
@@ -72,7 +65,6 @@ public class CustomerProfileService {
         return customerCisDtoList;
     }
 
-
     public List<AddressCisDto> getAddressCisWithLimit(int limit){
         List<CustomerProfile> customerProfileList = customerProfileRepository.getCustomerProfileWithLimit(limit);
         List<AddressCisDto> addressCisDtoList = new ArrayList<>();
@@ -92,13 +84,14 @@ public class CustomerProfileService {
         return addressCisDtoList ;
     }
 
-
     public List<InvestmentLimitCisDto> getInvestmentLimitCisWithLimit(int limit) {
 
         List<CustomerProfile> customerProfileList = customerProfileRepository.getCustomerProfileWithLimit(limit);
         List<InvestmentLimitCisDto> investmentCisDtoList = new ArrayList<>();
+
+
         for ( CustomerProfile customerProfile : customerProfileList) {
-            for (CustomerCis customerCis: customerProfile.getCustomerCisList()) {
+            for (CustomerCis customerCis : customerProfile.getCustomerCisList()) {
                 InvestmentLimitCisDto investmentCisDto = new InvestmentLimitCisDto();
                 investmentCisDto.setOverLimit(customerCis.getInvestmentLimitCis().getOverLimit());
                 investmentCisDto.setCreateDate(customerCis.getInvestmentLimitCis().getCreateDate());
@@ -111,16 +104,24 @@ public class CustomerProfileService {
 
     }
 
-    public List<String> addCustomerProfileALotProfile(List<CustomerProfile> customerProfileList) {
-
-        customerProfileRepository.persist(customerProfileList);
-        List<String> idCustomerProfile = new ArrayList<>();
-        for (CustomerProfile customerProfile : customerProfileList) {
-            idCustomerProfile.add(String.valueOf(customerProfile.getCustomerId()));
-        }
-
-        return idCustomerProfile;
-
+    public List<String> addCustomerProfileManyProfiles(List<CustomerProfile> customerProfileList) {
+        return customerProfileRepository.addManyProfile(customerProfileList);
     }
 
+    public List<CustomerProfileDto> deleteCustomerProfileManyProfiles(List<CustomerProfile> customerProfileList) {
+        List<CustomerProfile> deleteCustomerProfileList = customerProfileRepository.deleteManyProfile(customerProfileList);
+        List<CustomerProfileDto> customerProfileDtoList = new ArrayList<>();
+        CustomerProfileDto customerProfileDto;
+        for ( CustomerProfile customerProfile : deleteCustomerProfileList) {
+            customerProfileDto = new CustomerProfileDto();
+            customerProfileDto.setCustomerId(String.valueOf(customerProfile.getCustomerId()));
+            customerProfileDto.setTitleName(customerProfile.getTitleName());
+            customerProfileDto.setFirstName(customerProfile.getFirstName());
+            customerProfileDto.setLastName(customerProfile.getLastName());
+
+            customerProfileDtoList.add(customerProfileDto);
+        }
+
+        return customerProfileDtoList;
+    }
 }

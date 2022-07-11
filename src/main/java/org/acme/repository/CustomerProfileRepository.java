@@ -1,24 +1,19 @@
 package org.acme.repository;
 
-import io.quarkus.mongodb.panache.PanacheMongoRepository;
-import org.acme.dto.CustomerProfileDto;
 import org.acme.entity.CustomerProfile;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface CustomerProfileRepository extends PanacheMongoRepository<CustomerProfile> {
+public interface CustomerProfileRepository {
 
-    Optional<CustomerProfile> findCustomerProfileById(String id);
+    List<CustomerProfile> findCustomerProfileById(String id);
 
     List<CustomerProfile> getCustomerProfileWithLimit(int limit);
 
-//    List<CustomerProfile> getCustomerCisWithLimit(int limit);
+    String add(CustomerProfile customerProfile);
 
-//    List<CustomerProfile> getAddressCisWithLimit(int limit);
+    List<String> addManyProfile(List<CustomerProfile> customerProfileList);
 
-//    List<CustomerProfile> getInvestmentLimitCisWithLimit(int limit);
-
-    List<CustomerProfileDto> getTest(int limit);
+    List<CustomerProfile> deleteManyProfile(List<CustomerProfile> customerProfileList);
 
 }
