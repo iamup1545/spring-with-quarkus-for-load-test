@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class BaseMongoDBRepository {
 
     /** Campaign Management DB **/
-    public String campaignManagementDB = "campaignManagementDB";
-    public static final String customerProfileCollection = "customerProfile";
+    private static final String campaignManagementDB = "campaignManagementDB";
+    private static final String customerProfileCollection = "customerProfile";
 
     @Autowired
     private MongoClient mongoClient;

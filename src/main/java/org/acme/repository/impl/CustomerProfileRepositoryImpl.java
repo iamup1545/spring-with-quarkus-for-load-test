@@ -67,8 +67,9 @@ public class CustomerProfileRepositoryImpl extends BaseMongoDBRepository impleme
                 .insertMany(customerProfileList).getInsertedIds();
 
         for (Map.Entry<Integer, BsonValue> insertedId : integerBsonValueMap.entrySet()) {
-            insertedIds.add(String.valueOf(insertedId.getValue().asObjectId()));
+            insertedIds.add(String.valueOf(insertedId.getValue().asObjectId().getValue()));
         }
+
         return insertedIds;
     }
 
