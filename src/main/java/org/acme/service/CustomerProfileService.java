@@ -78,7 +78,6 @@ public class CustomerProfileService extends BaseService {
                     addressCisDtoList.add(addressCisDto);
                 }
             }
-
         }
 
         return addressCisDtoList ;
