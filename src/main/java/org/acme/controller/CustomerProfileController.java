@@ -8,6 +8,7 @@ import org.acme.entity.CustomerProfile;
 import org.acme.service.CustomerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class CustomerProfileController {
@@ -24,21 +24,15 @@ public class CustomerProfileController {
     @Autowired
     private CustomerProfileService customerProfileService;
 
-    @GetMapping("/getTest/{limit}") // for load test
-    @ResponseStatus(HttpStatus.OK)
-    public List<CustomerProfileDto> getTest(@PathVariable int limit){
-        return this.customerProfileService.getTest(limit);
-    }
-
     @GetMapping("/getCustomerProfileById/{customerId}") // for load test
     @ResponseStatus(HttpStatus.OK)
-    public Optional<CustomerProfile> getCustomerProfileById(@PathVariable String customerId){
+    public List<CustomerProfileDto> getCustomerProfileById(@PathVariable String customerId){
         return this.customerProfileService.getCustomerProfileById(String.valueOf(customerId));
     }
 
     @GetMapping("/getCustomerProfileWithLimit/{limit}") // for load test
     @ResponseStatus(HttpStatus.OK)
-    public List<CustomerProfile> getCustomerProfileWithLimit(@PathVariable int limit){
+    public List<CustomerProfileDto> getCustomerProfileWithLimit(@PathVariable int limit){
         return this.customerProfileService.getCustomerProfileWithLimit(limit);
     }
 
@@ -66,9 +60,15 @@ public class CustomerProfileController {
         return this.customerProfileService.getInvestmentLimitCisWithLimit(limit/2);
     }
 
-    @PostMapping("/addCustomerList")
+    @PostMapping("/addCustomerProfileList")
     @ResponseStatus(HttpStatus.CREATED)
-    public List<String> addCustomerList(@RequestBody List<CustomerProfile> customerProfileList){
-        return this.customerProfileService.addCustomerProfileALotProfile(customerProfileList);
+    public List<String> addCustomerProfileList(@RequestBody List<CustomerProfile> customerProfileList){
+        return this.customerProfileService.addCustomerProfileManyProfiles(customerProfileList);
+    }
+
+    @DeleteMapping("/deleteCustomerProfileList")
+    @ResponseStatus(HttpStatus.OK)
+    public List<CustomerProfileDto> deleteCustomerProfileList(@RequestBody List<CustomerProfile> customerProfileList){
+        return this.customerProfileService.deleteCustomerProfileManyProfiles(customerProfileList);
     }
 }

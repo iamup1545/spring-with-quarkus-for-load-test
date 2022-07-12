@@ -1,112 +1,128 @@
 package org.acme.repository.impl;
 
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
-import org.acme.dto.CustomerCisDto;
-import org.acme.dto.CustomerProfileDto;
-import org.acme.entity.CustomerCis;
+import org.acme.common.BaseMongoDBRepository;
 import org.acme.entity.CustomerProfile;
 import org.acme.repository.CustomerProfileRepository;
+import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @Repository("customerProfileRepository")
-public class CustomerProfileRepositoryImpl implements CustomerProfileRepository {
+public class CustomerProfileRepositoryImpl extends BaseMongoDBRepository implements CustomerProfileRepository {
 
-    @Autowired
-    private MongoClient mongoClient;
+    public static final String _id = "_id";
+    public static final String titleName = "titleName";
+    public static final String firstName = "firstName";
+    public static final String lastName = "lastName";
+    public static final String birthDay = "birthDay";
+    public static final String createdDateTime = "createdDateTime";
+    public static final String customerCisList = "customerCisList";
 
-    public Optional<CustomerProfile> findCustomerProfileById(String id) {
-        return this.findByIdOptional(new ObjectId(id));
-    }
+    public List<CustomerProfile> findCustomerProfileById(String id) {
+        List<CustomerProfile> customerProfileList = new ArrayList<>();
+        Document query = new Document();
+        query.append(_id, new ObjectId(id));
 
-//    public List<CustomerProfile> getCustomerProfileOnlyWithLimit(int limit) {
-//        /*Query query = new Query(); // can't implement in Repository
-//        query.fields().exclude("customerCisList");
-//        query.limit(limit);
-//        return mongoTemplate.find(query, CustomerProfile.class);*/
-//
-//        return this.find()
-//    }
-
-    public List<CustomerProfile> getCustomerProfileWithLimit(int limit) {
-        /*Query query = new Query(); // can't implement in Repository
-        query.limit(limit);
-        return mongoTemplate.find(query, CustomerProfile.class);*/
-
-//        return this.findAll().stream().limit(limit).collect(Collectors.toList());
-//        return this.findAll().stream().limit(limit).collect(Collectors.toList());
-
-        return this.findAll().stream().limit(limit).collect(Collectors.toList());
-    }
-
-//    public List<CustomerProfile> getCustomerCisWithLimit(int limit) {
-//        /*Query query = new Query(); // can't implement in Repository
-//        query.fields().include("customerCisList.cisId");
-//        query.limit(limit);
-//        return mongoTemplate.find(query,CustomerProfile.class);*/
-//        return this.find("").stream().limit(limit).collect(Collectors.toList());
-//    }
-
-    public List<CustomerProfile> getAddressCisWithLimit(int limit) {
-        /*Query query = new Query(); // can't implement in Repository
-        query.fields().include("customerCisList.addressCisList").include("customerCisList.cisId");
-        query.limit(limit);
-        return mongoTemplate.find(query,CustomerProfile.class);*/
-
-        return this.find("customerCisList.addressCisList").stream().limit(limit).collect(Collectors.toList());
-    }
-
-    public List<CustomerProfile> getInvestmentLimitCisWithLimit(int limit) {
-        /*Query query = new Query(); // can't implement in Repository
-        query.fields().include("customerCisList.cisId").include("customerCisList.investmentLimitCis");
-        query.limit(limit);
-        return mongoTemplate.find(query,CustomerProfile.class);*/
-
-        return this.find("customerCisList.investmentLimitCis").stream().limit(limit).collect(Collectors.toList());
-    }
-
-    public List<CustomerProfileDto> getTest(int limit) {
-        List<CustomerProfileDto> list = new ArrayList<>();
-        CustomerProfileDto customerProfileDto;
-//        CustomerCisDto customerCisDto;
-        System.out.println("limit : " + limit);
-        try (MongoCursor<Document> cursor = this.getCollection().find().limit(limit).cursor()) {
-//            cursor = (MongoCursor<Document>) getCollection().find().limit(limit);
-            while (cursor.hasNext()) {
-                Document document = cursor.next();
-                customerProfileDto = new CustomerProfileDto();
-                customerProfileDto.setCustomerId(String.valueOf(document.getObjectId("_id")));
-                customerProfileDto.setTitleName(document.getString("titleName"));
-                customerProfileDto.setFirstName(document.getString("firstName"));
-                customerProfileDto.setLastName(document.getString("lastName"));
-                customerProfileDto.setBirthDay(document.getDate("birthDay"));
-//                customerProfileDto.setCreatedDateTime(document.getDate("createdDateTime"));
-//                customerCisDto = new CustomerCisDto();
-//                customerCisDto.setCisId();
-//                customerProfileDto.setCustomerCisList(document("customerCisList"));
-                list.add(customerProfileDto);
-            }
-            System.out.println("Field customerCisList : " + list.size());
-
+        try (MongoCursor<CustomerProfile> cursor = super.getCustomerProfileCollection().find(query).cursor()) {
+            this.mapCustomerProfileList(cursor, customerProfileList);
         } catch (Exception exception) {
-            System.out.println("Error to get field customerCisList : " + exception);
+            System.err.println("Error!! : " + exception);
         }
 
-
-        return list;
+        return customerProfileList;
     }
 
-    private MongoCollection<Document> getCollection(){
-        return this.mongoClient.getDatabase("campaignManagementDB").getCollection("customerProfile");
+    public List<CustomerProfile> getCustomerProfileWithLimit(int limit) {
+        List<CustomerProfile> customerProfileList = new ArrayList<>();
+
+        try (MongoCursor<CustomerProfile> cursor = super.getCustomerProfileCollection().find().limit(limit).cursor()) {
+            this.mapCustomerProfileList(cursor, customerProfileList);
+        } catch (Exception exception) {
+            System.err.println("Error!! : " + exception);
+        }
+
+        return customerProfileList;
+    }
+
+    public String add(CustomerProfile customerProfile) {
+        return String.valueOf(super.getCustomerProfileCollection().insertOne(customerProfile).getInsertedId());
+    }
+
+    public List<String> addManyProfile(List<CustomerProfile> customerProfileList) {
+        List<String> insertedIds = new ArrayList<>();
+
+        for (CustomerProfile customerProfile : customerProfileList) {
+            customerProfile.setCreatedDateTime(LocalDate.now());
+        }
+
+        Map<Integer, BsonValue> integerBsonValueMap = super.getCustomerProfileCollection()
+                .insertMany(customerProfileList).getInsertedIds();
+
+        for (Map.Entry<Integer, BsonValue> insertedId : integerBsonValueMap.entrySet()) {
+            insertedIds.add(String.valueOf(insertedId.getValue().asObjectId()));
+        }
+        return insertedIds;
+    }
+
+    public List<CustomerProfile> deleteManyProfile(List<CustomerProfile> customerProfileList) {
+        List<CustomerProfile> deleteProfileList = new ArrayList<>();
+        for (CustomerProfile customerProfile : customerProfileList) {
+            deleteProfileList.add(super.getCustomerProfileCollection()
+                    .findOneAndDelete(this.validateAndAppendQueryToDocument(customerProfile)));
+        }
+
+        return deleteProfileList;
+    }
+
+    private Document validateAndAppendQueryToDocument(CustomerProfile customerProfile) {
+        Document query = new Document();
+
+        if (!StringUtils.isEmpty(customerProfile.getCustomerId())) {
+            query.append(_id, customerProfile.getCustomerId());
+        }
+        if (!StringUtils.isEmpty(customerProfile.getTitleName())) {
+            query.append(titleName, customerProfile.getTitleName());
+        }
+        if (!StringUtils.isEmpty(customerProfile.getFirstName())) {
+            query.append(firstName, customerProfile.getFirstName());
+        }
+        if (!StringUtils.isEmpty(customerProfile.getLastName())) {
+            query.append(lastName, customerProfile.getLastName());
+        }
+        if (!StringUtils.isEmpty(customerProfile.getBirthDay())) {
+            query.append(birthDay, customerProfile.getBirthDay());
+        }
+        if (!StringUtils.isEmpty(customerProfile.getCreatedDateTime())) {
+            query.append(createdDateTime, customerProfile.getCreatedDateTime());
+        }
+        if (!StringUtils.isEmpty(customerProfile.getCustomerCisList())) {
+            query.append(customerCisList, customerProfile.getCustomerCisList());
+        }
+
+        return query;
+    }
+
+    private void mapCustomerProfileList(MongoCursor<CustomerProfile> cursor, List<CustomerProfile> customerProfileList) {
+        CustomerProfile customerProfile;
+        while (cursor.hasNext()) {
+            CustomerProfile document = cursor.next();
+            customerProfile = new CustomerProfile();
+            customerProfile.setCustomerId(document.getCustomerId());
+            customerProfile.setTitleName(document.getTitleName());
+            customerProfile.setFirstName(document.getFirstName());
+            customerProfile.setLastName(document.getLastName());
+            customerProfile.setBirthDay(document.getBirthDay());
+            customerProfile.setCreatedDateTime(document.getCreatedDateTime());
+            customerProfile.setCustomerCisList(document.getCustomerCisList());
+            customerProfileList.add(customerProfile);
+        }
     }
 }
