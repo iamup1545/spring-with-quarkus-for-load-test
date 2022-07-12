@@ -1,4 +1,4 @@
-package org.acme.dto;
+package org.acme.dto.customerprofile;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,10 +9,12 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerCisDto {
+public class AddressCisDto {
 
-    Integer cisId;
+    private String addressName;
 
-    String customer_id;
+    private String country;
+
+    private String zipCode;
 
 }

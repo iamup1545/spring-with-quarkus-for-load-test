@@ -1,13 +1,13 @@
 package org.acme.service;
 
-import org.acme.common.BaseService;
-import org.acme.dto.AddressCisDto;
-import org.acme.dto.CustomerCisDto;
-import org.acme.dto.CustomerProfileDto;
-import org.acme.dto.InvestmentLimitCisDto;
-import org.acme.entity.AddressCis;
-import org.acme.entity.CustomerCis;
-import org.acme.entity.CustomerProfile;
+import org.acme.common.service.BaseService;
+import org.acme.dto.customerprofile.AddressCisDto;
+import org.acme.dto.customerprofile.CustomerCisDto;
+import org.acme.dto.customerprofile.CustomerProfileDto;
+import org.acme.dto.customerprofile.InvestmentLimitCisDto;
+import org.acme.entity.customerprofile.AddressCis;
+import org.acme.entity.customerprofile.CustomerCis;
+import org.acme.entity.customerprofile.CustomerProfile;
 import org.acme.repository.CustomerProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,12 +23,12 @@ public class CustomerProfileService extends BaseService {
 
     public List<CustomerProfileDto> getCustomerProfileById(String id){
         List<CustomerProfile> customerProfileList =  customerProfileRepository.findCustomerProfileById(id);
-        return super.mapCustomerProfileData(customerProfileList);
+        return this.mapCustomerProfileData(customerProfileList);
     }
 
     public List<CustomerProfileDto> getCustomerProfileWithLimit(int limit){
         List<CustomerProfile> customerProfileList =  customerProfileRepository.getCustomerProfileWithLimit(limit);
-        return super.mapCustomerProfileData(customerProfileList);
+        return this.mapCustomerProfileData(customerProfileList);
     }
 
     public List<CustomerProfileDto> getCustomerProfileOnlyWithLimit(int limit){
@@ -117,6 +117,26 @@ public class CustomerProfileService extends BaseService {
             customerProfileDto.setTitleName(customerProfile.getTitleName());
             customerProfileDto.setFirstName(customerProfile.getFirstName());
             customerProfileDto.setLastName(customerProfile.getLastName());
+
+            customerProfileDtoList.add(customerProfileDto);
+        }
+
+        return customerProfileDtoList;
+    }
+
+    private List<CustomerProfileDto> mapCustomerProfileData(List<CustomerProfile> customerProfileList) {
+        List<CustomerProfileDto> customerProfileDtoList = new ArrayList<>();
+        CustomerProfileDto customerProfileDto;
+        for ( CustomerProfile customerProfile : customerProfileList) {
+
+            customerProfileDto = new CustomerProfileDto();
+            customerProfileDto.setCustomerId(String.valueOf(customerProfile.getCustomerId()));
+            customerProfileDto.setTitleName(customerProfile.getTitleName());
+            customerProfileDto.setFirstName(customerProfile.getFirstName());
+            customerProfileDto.setLastName(customerProfile.getLastName());
+            customerProfileDto.setBirthDay(customerProfile.getBirthDay());
+            customerProfileDto.setCreatedDateTime(customerProfile.getCreatedDateTime());
+            customerProfileDto.setCustomerCisList(customerProfile.getCustomerCisList());
 
             customerProfileDtoList.add(customerProfileDto);
         }

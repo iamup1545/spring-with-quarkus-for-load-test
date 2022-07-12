@@ -1,12 +1,14 @@
 package org.acme.repository.impl;
 
+import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCursor;
-import org.acme.common.BaseMongoDBRepository;
-import org.acme.entity.CustomerProfile;
+import org.acme.common.db.BaseMongoDBRepository;
+import org.acme.entity.customerprofile.CustomerProfile;
 import org.acme.repository.CustomerProfileRepository;
 import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -18,6 +20,8 @@ import java.util.Map;
 @Repository("customerProfileRepository")
 public class CustomerProfileRepositoryImpl extends BaseMongoDBRepository implements CustomerProfileRepository {
 
+    private static final String customerProfileCollection = "customerProfile";
+
     public static final String _id = "_id";
     public static final String titleName = "titleName";
     public static final String firstName = "firstName";
@@ -26,12 +30,25 @@ public class CustomerProfileRepositoryImpl extends BaseMongoDBRepository impleme
     public static final String createdDateTime = "createdDateTime";
     public static final String customerCisList = "customerCisList";
 
+    @Autowired
+    protected MongoClient mongoClient;
+
+    public CustomerProfileRepositoryImpl(MongoClient mongoClient) {
+        super(mongoClient);
+        this.mongoClient = mongoClient;
+    }
+
+    @Override
+    public void setCollectionName() {
+        this.collectionName = customerProfileCollection;
+    }
+
     public List<CustomerProfile> findCustomerProfileById(String id) {
         List<CustomerProfile> customerProfileList = new ArrayList<>();
         Document query = new Document();
         query.append(_id, new ObjectId(id));
 
-        try (MongoCursor<CustomerProfile> cursor = super.getCustomerProfileCollection().find(query).cursor()) {
+        try (MongoCursor<CustomerProfile> cursor = super.getCollection(CustomerProfile.class).find(query).cursor()) {
             this.mapCustomerProfileList(cursor, customerProfileList);
         } catch (Exception exception) {
             System.err.println("Error!! : " + exception);
@@ -43,7 +60,7 @@ public class CustomerProfileRepositoryImpl extends BaseMongoDBRepository impleme
     public List<CustomerProfile> getCustomerProfileWithLimit(int limit) {
         List<CustomerProfile> customerProfileList = new ArrayList<>();
 
-        try (MongoCursor<CustomerProfile> cursor = super.getCustomerProfileCollection().find().limit(limit).cursor()) {
+        try (MongoCursor<CustomerProfile> cursor = super.getCollection(CustomerProfile.class).find().limit(limit).cursor()) {
             this.mapCustomerProfileList(cursor, customerProfileList);
         } catch (Exception exception) {
             System.err.println("Error!! : " + exception);
@@ -53,7 +70,7 @@ public class CustomerProfileRepositoryImpl extends BaseMongoDBRepository impleme
     }
 
     public String add(CustomerProfile customerProfile) {
-        return String.valueOf(super.getCustomerProfileCollection().insertOne(customerProfile).getInsertedId());
+        return String.valueOf(super.getCollection(CustomerProfile.class).insertOne(customerProfile).getInsertedId());
     }
 
     public List<String> addManyProfile(List<CustomerProfile> customerProfileList) {
@@ -63,7 +80,7 @@ public class CustomerProfileRepositoryImpl extends BaseMongoDBRepository impleme
             customerProfile.setCreatedDateTime(LocalDate.now());
         }
 
-        Map<Integer, BsonValue> integerBsonValueMap = super.getCustomerProfileCollection()
+        Map<Integer, BsonValue> integerBsonValueMap = super.getCollection(CustomerProfile.class)
                 .insertMany(customerProfileList).getInsertedIds();
 
         for (Map.Entry<Integer, BsonValue> insertedId : integerBsonValueMap.entrySet()) {
@@ -76,7 +93,7 @@ public class CustomerProfileRepositoryImpl extends BaseMongoDBRepository impleme
     public List<CustomerProfile> deleteManyProfile(List<CustomerProfile> customerProfileList) {
         List<CustomerProfile> deleteProfileList = new ArrayList<>();
         for (CustomerProfile customerProfile : customerProfileList) {
-            deleteProfileList.add(super.getCustomerProfileCollection()
+            deleteProfileList.add((CustomerProfile) super.getCollection(CustomerProfile.class)
                     .findOneAndDelete(this.validateAndAppendQueryToDocument(customerProfile)));
         }
 

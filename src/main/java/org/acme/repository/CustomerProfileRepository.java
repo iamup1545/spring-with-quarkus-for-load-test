@@ -1,6 +1,6 @@
 package org.acme.repository;
 
-import org.acme.entity.CustomerProfile;
+import org.acme.entity.customerprofile.CustomerProfile;
 
 import java.util.List;
 

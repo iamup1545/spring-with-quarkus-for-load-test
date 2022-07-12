@@ -1,22 +1,26 @@
-package org.acme.dto;
+package org.acme.entity.customerprofile;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-import org.acme.entity.CustomerCis;
+import org.bson.codecs.pojo.annotations.BsonId;
+import org.bson.codecs.pojo.annotations.BsonProperty;
+import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
 @Data
-@ToString
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerProfileDto {
+public class CustomerProfile {
 
-    private String customerId;
+    @BsonId
+    @BsonProperty("_id")
+    private ObjectId customerId;                       // used by MongoDB for the _id field
 
     private String titleName;
 

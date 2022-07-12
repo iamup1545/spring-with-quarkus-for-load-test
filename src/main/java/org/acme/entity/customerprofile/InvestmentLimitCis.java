@@ -1,18 +1,16 @@
-package org.acme.dto;
+package org.acme.entity.customerprofile;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class InvestmentLimitCisDto {
+public class InvestmentLimitCis {
 
     private BigDecimal overLimit;
 

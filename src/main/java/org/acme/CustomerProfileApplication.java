@@ -4,10 +4,10 @@ import com.github.javafaker.Faker;
 import io.quarkus.runtime.Quarkus;
 import io.quarkus.runtime.QuarkusApplication;
 import io.quarkus.runtime.annotations.QuarkusMain;
-import org.acme.entity.AddressCis;
-import org.acme.entity.CustomerCis;
-import org.acme.entity.CustomerProfile;
-import org.acme.entity.InvestmentLimitCis;
+import org.acme.entity.customerprofile.AddressCis;
+import org.acme.entity.customerprofile.CustomerCis;
+import org.acme.entity.customerprofile.CustomerProfile;
+import org.acme.entity.customerprofile.InvestmentLimitCis;
 import org.acme.repository.CustomerProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 

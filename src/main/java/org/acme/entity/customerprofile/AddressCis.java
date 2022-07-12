@@ -1,4 +1,4 @@
-package org.acme.entity;
+package org.acme.entity.customerprofile;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

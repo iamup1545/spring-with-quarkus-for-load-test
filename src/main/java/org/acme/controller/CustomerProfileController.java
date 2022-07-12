@@ -1,10 +1,10 @@
 package org.acme.controller;
 
-import org.acme.dto.AddressCisDto;
-import org.acme.dto.CustomerCisDto;
-import org.acme.dto.CustomerProfileDto;
-import org.acme.dto.InvestmentLimitCisDto;
-import org.acme.entity.CustomerProfile;
+import org.acme.dto.customerprofile.AddressCisDto;
+import org.acme.dto.customerprofile.CustomerCisDto;
+import org.acme.dto.customerprofile.CustomerProfileDto;
+import org.acme.dto.customerprofile.InvestmentLimitCisDto;
+import org.acme.entity.customerprofile.CustomerProfile;
 import org.acme.service.CustomerProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
