@@ -46,7 +46,7 @@ public class CustomerServiceTest {
     }
 
     @Test
-    @DisplayName("Test loan to value case success")
+    @DisplayName("Test get customer profile by id service")
     public void testGetCustomerProfileById() {
         when(this.customerProfileRepository.findCustomerProfileById(any())).thenReturn(this.getMockEntityGetCustomerProfileById());
 
