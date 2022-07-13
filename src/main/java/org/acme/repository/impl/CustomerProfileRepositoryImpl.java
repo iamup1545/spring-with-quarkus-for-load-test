@@ -22,6 +22,7 @@ public class CustomerProfileRepositoryImpl extends BaseMongoDBRepository impleme
 
     private static final String collectionName = "customerProfile";
 
+    /** Fields in collection **/
     public static final String _id = "_id";
     public static final String titleName = "titleName";
     public static final String firstName = "firstName";
