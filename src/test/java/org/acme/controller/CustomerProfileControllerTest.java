@@ -21,6 +21,7 @@ public class CustomerProfileControllerTest {
                 .statusCode(200).extract().response().getBody().asString();
 
         System.out.println("Response : " + response);
+
     }
 
 }
