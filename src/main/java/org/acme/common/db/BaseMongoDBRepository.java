@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 public abstract class BaseMongoDBRepository {
 
     @Value("${quarkus.mongodb.database}")
-    protected String dataBaseName;
+    protected String dbName;
     protected String dbCollectionName;
 
     protected MongoClient mongoClient;
@@ -20,7 +20,7 @@ public abstract class BaseMongoDBRepository {
 
     protected <T> MongoCollection<T> getCollection(Class<T> returnClass) {
         this.setDBCollectionName();
-        return this.mongoClient.getDatabase(this.dataBaseName)
+        return this.mongoClient.getDatabase(this.dbName)
                 .getCollection(this.dbCollectionName, returnClass);
     }
 }
