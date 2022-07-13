@@ -8,7 +8,7 @@ public abstract class BaseMongoDBRepository {
 
     @Value("${quarkus.mongodb.database}")
     protected String dataBaseName;
-    protected String collectionName;
+    protected String dbCollectionName;
 
     protected MongoClient mongoClient;
 
@@ -16,11 +16,11 @@ public abstract class BaseMongoDBRepository {
         this.mongoClient = mongoClient;
     }
 
-    public abstract void setCollectionName();
+    public abstract void setDBCollectionName();
 
     protected <T> MongoCollection<T> getCollection(Class<T> returnClass) {
-        this.setCollectionName();
+        this.setDBCollectionName();
         return this.mongoClient.getDatabase(this.dataBaseName)
-                .getCollection(this.collectionName, returnClass);
+                .getCollection(this.dbCollectionName, returnClass);
     }
 }

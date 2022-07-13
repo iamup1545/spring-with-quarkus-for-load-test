@@ -20,7 +20,7 @@ import java.util.Map;
 @Repository("customerProfileRepository")
 public class CustomerProfileRepositoryImpl extends BaseMongoDBRepository implements CustomerProfileRepository {
 
-    private static final String customerProfileCollection = "customerProfile";
+    private static final String collectionName = "customerProfile";
 
     public static final String _id = "_id";
     public static final String titleName = "titleName";
@@ -39,8 +39,8 @@ public class CustomerProfileRepositoryImpl extends BaseMongoDBRepository impleme
     }
 
     @Override
-    public void setCollectionName() {
-        this.collectionName = customerProfileCollection;
+    public void setDBCollectionName() {
+        this.dbCollectionName = collectionName;
     }
 
     public List<CustomerProfile> findCustomerProfileById(String id) {
