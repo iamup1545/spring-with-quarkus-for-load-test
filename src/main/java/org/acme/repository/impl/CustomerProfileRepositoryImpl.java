@@ -94,7 +94,7 @@ public class CustomerProfileRepositoryImpl extends BaseMongoDBRepository impleme
     public List<CustomerProfile> deleteManyProfile(List<CustomerProfile> customerProfileList) {
         List<CustomerProfile> deleteProfileList = new ArrayList<>();
         for (CustomerProfile customerProfile : customerProfileList) {
-            deleteProfileList.add((CustomerProfile) super.getCollection(CustomerProfile.class)
+            deleteProfileList.add(super.getCollection(CustomerProfile.class)
                     .findOneAndDelete(this.validateAndAppendQueryToDocument(customerProfile)));
         }
 
