@@ -1,5 +1,6 @@
 package org.acme.controller;
 
+import io.smallrye.common.annotation.NonBlocking;
 import org.acme.dto.customerprofile.AddressCisDto;
 import org.acme.dto.customerprofile.CustomerCisDto;
 import org.acme.dto.customerprofile.CustomerProfileDto;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
+@NonBlocking
 public class CustomerProfileController {
 
     @Autowired
