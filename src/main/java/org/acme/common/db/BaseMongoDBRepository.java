@@ -2,7 +2,10 @@ package org.acme.common.db;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
+import io.vertx.core.http.HttpClientOptions;
+import io.vertx.ext.web.client.WebClientOptions;
 import io.vertx.mutiny.core.Vertx;
+import io.vertx.mutiny.core.http.HttpClient;
 import io.vertx.mutiny.ext.web.client.WebClient;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -21,7 +24,11 @@ public abstract class BaseMongoDBRepository {
     }
 
     public void initWebClient(Vertx vertx) {
-        this.webClient = WebClient.create(vertx);
+        WebClientOptions options = new WebClientOptions()
+                .setDefaultHost("localhost")
+                .setDefaultPort(4545);
+
+        this.webClient = WebClient.create(vertx, options);
     }
 
     public abstract void setDBCollectionName();

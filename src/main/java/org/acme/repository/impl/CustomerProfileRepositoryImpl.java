@@ -51,7 +51,7 @@ public class CustomerProfileRepositoryImpl extends BaseMongoDBRepository impleme
     }
 
     public Uni<Object[]> getCustomerProfileWithMounteBank() {
-        return super.webClient.get(4545, "127.0.0.1", "/getDocument")
+        return super.webClient.get( "/getDocument")
                 .send()
                 .onItem()
                 .transform(resp -> {
