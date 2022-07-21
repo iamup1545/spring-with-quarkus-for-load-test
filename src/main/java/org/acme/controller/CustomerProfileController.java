@@ -75,7 +75,7 @@ public class CustomerProfileController {
         return this.customerProfileService.deleteCustomerProfileManyProfiles(customerProfileList);
     }
 
-    @GetMapping("/getCustomerProfileWithMounteBank")
+    @GetMapping("/getCustomerProfileWithMounteBank") // for load test
     @ResponseStatus(HttpStatus.OK)
     public Uni<Object[]> getCustomerProfileWithMounteBank(){
         return this.customerProfileService.getCustomerProfileWithMounteBank();
