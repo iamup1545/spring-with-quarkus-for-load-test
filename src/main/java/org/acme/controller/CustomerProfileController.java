@@ -1,6 +1,7 @@
 package org.acme.controller;
 
 import io.smallrye.common.annotation.NonBlocking;
+import io.smallrye.mutiny.Uni;
 import org.acme.dto.customerprofile.AddressCisDto;
 import org.acme.dto.customerprofile.CustomerCisDto;
 import org.acme.dto.customerprofile.CustomerProfileDto;
@@ -58,7 +59,7 @@ public class CustomerProfileController {
 
     @GetMapping("/getInvestmentLimitCisWithLimit/{limit}")
     @ResponseStatus(HttpStatus.OK)
-    public List<InvestmentLimitCisDto>  getInvestmentLimitCisWithLimit(@PathVariable int limit){
+    public List<InvestmentLimitCisDto> getInvestmentLimitCisWithLimit(@PathVariable int limit){
         return this.customerProfileService.getInvestmentLimitCisWithLimit(limit/2);
     }
 
@@ -72,5 +73,11 @@ public class CustomerProfileController {
     @ResponseStatus(HttpStatus.OK)
     public List<CustomerProfileDto> deleteCustomerProfileList(@RequestBody List<CustomerProfile> customerProfileList){
         return this.customerProfileService.deleteCustomerProfileManyProfiles(customerProfileList);
+    }
+
+    @GetMapping("/getCustomerProfileWithMounteBank")
+    @ResponseStatus(HttpStatus.OK)
+    public Uni<Object[]> getCustomerProfileWithMounteBank(){
+        return this.customerProfileService.getCustomerProfileWithMounteBank();
     }
 }

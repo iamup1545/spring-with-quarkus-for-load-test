@@ -90,6 +90,11 @@
       <artifactId>quarkus-mongodb-client</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>io.smallrye.reactive</groupId>
+      <artifactId>smallrye-mutiny-vertx-web-client</artifactId>
+    </dependency>
+
   </dependencies>
   <build>
     <plugins>

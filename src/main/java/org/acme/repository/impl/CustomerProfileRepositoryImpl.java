@@ -2,6 +2,8 @@ package org.acme.repository.impl;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCursor;
+import io.smallrye.mutiny.Uni;
+import io.vertx.mutiny.core.Vertx;
 import org.acme.common.db.BaseMongoDBRepository;
 import org.acme.entity.customerprofile.CustomerProfile;
 import org.acme.repository.CustomerProfileRepository;
@@ -34,14 +36,31 @@ public class CustomerProfileRepositoryImpl extends BaseMongoDBRepository impleme
     @Autowired
     protected MongoClient mongoClient;
 
-    public CustomerProfileRepositoryImpl(MongoClient mongoClient) {
-        super(mongoClient);
+    @Autowired
+    protected Vertx vertx;
+
+    public CustomerProfileRepositoryImpl(MongoClient mongoClient, Vertx vertx) {
+        super(mongoClient, vertx);
         this.mongoClient = mongoClient;
+        this.vertx = vertx;
     }
 
     @Override
     public void setDBCollectionName() {
         this.dbCollectionName = collectionName;
+    }
+
+    public Uni<Object[]> getCustomerProfileWithMounteBank() {
+        return super.webClient.get(4545, "127.0.0.1", "/getDocument")
+                .send()
+                .onItem()
+                .transform(resp -> {
+                    if (resp.statusCode() == 200) {
+                        return resp.bodyAsJson(Object[].class);
+                    } else {
+                        throw new RuntimeException("");
+                    }
+                });
     }
 
     public List<CustomerProfile> findCustomerProfileById(String id) {

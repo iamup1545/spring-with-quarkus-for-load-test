@@ -1,5 +1,6 @@
 package org.acme.service;
 
+import io.smallrye.mutiny.Uni;
 import org.acme.common.service.BaseService;
 import org.acme.dto.customerprofile.AddressCisDto;
 import org.acme.dto.customerprofile.CustomerCisDto;
@@ -105,6 +106,10 @@ public class CustomerProfileService extends BaseService {
 
     public List<String> addCustomerProfileManyProfiles(List<CustomerProfile> customerProfileList) {
         return customerProfileRepository.addManyProfile(customerProfileList);
+    }
+
+    public Uni<Object[]> getCustomerProfileWithMounteBank(){
+        return customerProfileRepository.getCustomerProfileWithMounteBank();
     }
 
     public List<CustomerProfileDto> deleteCustomerProfileManyProfiles(List<CustomerProfile> customerProfileList) {
